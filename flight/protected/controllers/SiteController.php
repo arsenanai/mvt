@@ -152,21 +152,11 @@ class SiteController extends Controller
 
 	private function saveMessage($type, $parsedMessage){
 		try{
-			$command = Yii::app()->db->createCommand();
-			$count = $command
-		    ->select('count(*)')
-		    ->from('messages m')
-		    //->join('tbl_profile p', 'u.id=p.user_id')
-		    ->where('m.type=:type', array(':type'=>$type))
-		    ->andWhere('m.message=:message', array(':message'=>$parsedMessage))
-		    ->queryColumn();
-	    if($count[0]==='0'){
-	    	$command->insert('messages', array(
-				    'type'=>$type,
-				    'message'=>$parsedMessage,
-				    'date'=>date("Y-m-d H:i:s")
-				));
-	    }
+    	$message=new Messages;
+			$message->type = $type;
+			$message->message = $parsedMessage;
+			$message->date = date("Y-m-d H:i:s");
+			$message->save();
 	    return true;
   	}catch(\Exception $e){return "check database connectivity";}
 	}
